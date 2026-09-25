@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { connection, hasRealCredential, users } from '../config/environments';
+import { connection, hasRealCredential, resolveLoggedInUserLabelName, users } from '../config/environments';
 
 const validationMessages: Record<string, string> = {
   usernameRequired: 'The User name field is required.',
@@ -119,7 +119,10 @@ for (const user of Object.values(users) as UserEntry[]) {
     await password.fill(passwordValue);
     await submit.click();
 
-    await expect(page.locator('#loggedInUser')).toContainText(user.displayName || usernameValue);
+    const loggedInUserLabelName = await resolveLoggedInUserLabelName(usernameValue);
+    const expectedDisplayName = loggedInUserLabelName || user.displayName || usernameValue;
+
+    await expect(page.locator('#loggedInUser')).toContainText(expectedDisplayName);
     await verifyRole(page, user);
     await logOut(page);
   });
