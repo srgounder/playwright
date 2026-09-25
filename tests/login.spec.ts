@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-const { connection } = require('../config/environments');
+import { connection } from '../config/environments';
 
 test('test', async ({ page }) => {
   await page.goto(connection.url());

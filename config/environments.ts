@@ -1,4 +1,4 @@
-const environments = Object.freeze({
+export const environments = Object.freeze({
   qa: Object.freeze({
     baseUrl: process.env.QA_BASE_URL || 'https://qa1carepro.evolent.com/',
     username: process.env.QA_USERNAME || 'svc_auto_ic2',
@@ -6,10 +6,18 @@ const environments = Object.freeze({
   }),
 });
 
-const environmentName = (process.env.TEST_ENV || 'qa').toLowerCase();
-const credentials = environments[environmentName];
+const normalizedEnvironmentName = (process.env.TEST_ENV || 'qa').toLowerCase();
+const environmentKey = normalizedEnvironmentName as keyof typeof environments;
+const credentials = environments[environmentKey];
 
-const users = Object.freeze({
+if (!credentials) {
+  throw new Error(
+    `Unsupported TEST_ENV "${normalizedEnvironmentName}". Available environments: ${Object.keys(environments).join(', ')}`,
+  );
+}
+
+export const environmentName = normalizedEnvironmentName;
+export const users = Object.freeze({
   intake: Object.freeze({
     userType: 'Intake Coordinator user',
     username: process.env.QA_INTAKE_USERNAME || credentials.username,
@@ -64,22 +72,10 @@ const users = Object.freeze({
   }),
 });
 
-const connection = Object.freeze({
+export const connection = Object.freeze({
   ...credentials,
   users,
   url: (path = '/') => new URL(path, credentials.baseUrl).toString(),
 });
 
-if (!credentials) {
-  throw new Error(
-    `Unsupported TEST_ENV "${environmentName}". Available environments: ${Object.keys(environments).join(', ')}`,
-  );
-}
-
-module.exports = {
-  environmentName,
-  credentials,
-  connection,
-  users,
-  environments,
-};
+export { credentials, environments };

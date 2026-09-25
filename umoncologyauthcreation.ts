@@ -1,7 +1,14 @@
-import { test, expect } from '@playwright/test';
-const { connection } = require('../config/environments');
+import { chromium } from '@playwright/test';
+import { connection } from './config/environments';
 
-test('test', async ({ page }) => {
+(async () => {
+  const browser = await chromium.launch({
+    channel: 'chrome',
+    headless: false,
+  });
+  const context = await browser.newContext();
+  const page = await context.newPage();
+
   await page.goto(connection.url());
   await page.getByRole('textbox', { name: 'User name' }).click();
   await page.getByRole('textbox', { name: 'User name' }).fill(connection.username);
@@ -18,6 +25,8 @@ test('test', async ({ page }) => {
   await page.locator('#GeneralInfoDataModel_SelectedRequestedById').selectOption('725060001');
   await page.getByRole('textbox', { name: 'Partial Name or Full NPI' }).click();
   await page.getByRole('textbox', { name: 'Partial Name or Full NPI' }).fill('IQ_UT_PF_080626029 IQ_UT_LF_080626029, MD');
+  await page.getByText('IQ_UT_PF_080626029').click();
+  await page.getByText('IQ_UT_PF_080626029').click();
   await page.getByText('IQ_UT_PF_080626029 IQ_UT_LF_080626029, MD @ IQ _Molina_UT_080726_029 of Molina').click();
   await page.getByRole('textbox', { name: 'Partial Last Name' }).click();
   await page.getByRole('textbox', { name: 'Partial Last Name' }).fill('IQ_UT_PF_080626029 IQ_UT_LF_080626029, MD');
@@ -30,6 +39,7 @@ test('test', async ({ page }) => {
   await page.locator('#PatientInfoDataModel_LastName').fill('IQ_LN_08062026_2065');
   await page.getByRole('row', { name: 'Date of Birth' }).getByLabel('').click();
   await page.getByRole('row', { name: 'Date of Birth' }).getByLabel('').fill('12/18/1991');
+  await page.locator('#EditRequiredPatientInfoViewModel > .nchPortalContainer > .ui-helper-clearfix > div').first().click();
   await page.getByText('View Request Page Review & Submit General InformationRequesting ProviderPlace').click();
   await page.locator('#PatientInfoDataModel_ExternalId').click();
   await page.locator('#PatientInfoDataModel_ExternalId').fill('IQ0806262065');
@@ -55,6 +65,12 @@ test('test', async ({ page }) => {
   await page.getByRole('button').filter({ hasText: /^$/ }).click();
   await page.getByRole('heading', { name: 'Service Items' }).click();
   await page.locator('#serviceItemSearchTerm').click();
+  await page.locator('#serviceItemSearchTerm').fill('90562');
+  await page.locator('#serviceItemSearchTerm').press('Enter');
+  await page.locator('#serviceItemSearchTerm').fill('9');
+  await page.locator('#serviceItemSearchTerm').click();
+  await page.locator('#serviceItemSearchTerm').fill('93452');
+  await page.locator('#serviceItemSearchTerm').press('Enter');
   await page.locator('#serviceItemSearchTerm').fill('j1442');
   await page.locator('#serviceItemSearchTerm').press('Enter');
   await page.getByText('J1442 FILGRASTIM G-CSF 1 MCG').click();
@@ -73,12 +89,32 @@ test('test', async ({ page }) => {
   await page.getByText('Characters Remaining: 3997').click();
   await page.getByText('View Request Page Review & Submit General InformationRequesting ProviderPlace').click();
   await page.getByRole('button', { name: 'Next' }).click();
-  await page.locator('#loadingSpinner').waitFor({ state: 'hidden' });
+  await page.locator('.ui-widget-overlay').click();
   await page.locator('#PeerToPeerContactViewModel_ContactName').fill('sat');
-  await page.locator('#PeerToPeerContactViewModel_DirectPhoneNumber').fill('1234567890');
   await page.locator('#PeerToPeerContactViewModel_DirectPhoneNumberExtension').fill('1234');
-  await page.getByRole('button', { name: 'Submit' }).click();
-  await page.waitForTimeout(90000);
+  await page.goto(connection.url('/IntakeHome/NewRequest/AuthorizationDecompResult'));
+  const page1Promise = page.waitForEvent('popup');
+  await page.getByText('AR3919389').click();
+  const page1 = await page1Promise;
+  const page2Promise = page1.waitForEvent('popup');
+  await page1.getByText('Cancel / Void').click();
+  const page2 = await page2Promise;
+  await page2.close();
+  await page1.getByRole('button', { name: 'ACTION' }).click();
+  const page3Promise = page1.waitForEvent('popup');
+  await page1.getByText('Cancel / Void').click();
+  const page3 = await page3Promise;
+  await page3.getByRole('checkbox', { name: 'Administrative error in Diagnosis Entered' }).check();
+  await page3.getByRole('button', { name: 'SUBMIT' }).click();
+  await page3.getByRole('button', { name: 'Ok' }).click();
+  await page3.close();
+  await page1.goto(connection.url('/determination/request/detail?authorizationRequestIdString=9a558e66-549d-f111-a835-7c1e5215bd7f'));
+  await page.goto(connection.url('/Determination/Home/Index?areaId=7ae72752-e012-e911-80e6-005056855f9a'));
+  await page1.close();
   await page.locator('#loggedInUser').getByText('Automation IC').click();
   await page.getByText('Log Off').click();
-});
+  await page.close();
+
+  await context.close();
+  await browser.close();
+})();

@@ -1,7 +1,7 @@
-import { test, expect } from '@playwright/test';
-const { connection, users } = require('../config/environments');
+import { test, expect, type Page } from '@playwright/test';
+import { connection, users } from '../config/environments';
 
-const validationMessages = {
+const validationMessages: Record<string, string> = {
   usernameRequired: 'The User name field is required.',
   passwordRequired: 'The Password field is required.',
   invalidCredentials: 'The user name or password provided is incorrect.',
@@ -16,17 +16,17 @@ const providerPortalLinks = [
   'Outcomes Reporting Pilot',
 ];
 
-const getLoginControls = (page) => ({
+const getLoginControls = (page: Page) => ({
   username: page.getByRole('textbox', { name: 'User name' }),
   password: page.getByRole('textbox', { name: 'Password' }),
   submit: page.getByRole('button', { name: 'Log On' }),
 });
 
-async function expectInvalidCredentials(page) {
+async function expectInvalidCredentials(page: Page) {
   await expect(page.getByText(validationMessages.invalidCredentials, { exact: true })).toBeVisible();
 }
 
-async function verifyRole(page, user) {
+async function verifyRole(page: Page, user: (typeof users)[keyof typeof users]) {
   const roleOption = page.locator(`[dropdown="role"][name="${user.roleTab}"]`);
   if (await roleOption.isVisible()) {
     await roleOption.click();
@@ -62,7 +62,7 @@ async function verifyRole(page, user) {
   await expect(page.getByText('Intake', { exact: true })).toBeHidden();
 }
 
-async function logOut(page) {
+async function logOut(page: Page) {
   await page.locator('#loggedInUser span[data-bind="text: displayName"]').click();
   const logOff = page.getByText('Log Off', { exact: true });
   await expect(logOff).toBeVisible();
