@@ -16,6 +16,15 @@ const providerPortalLinks = [
   'Outcomes Reporting Pilot',
 ];
 
+type UserEntry = {
+  userType: string;
+  username?: string;
+  password?: string;
+  displayName?: string;
+  roleTab: string;
+  providerPortal?: boolean;
+};
+
 const getLoginControls = (page: Page) => ({
   username: page.getByRole('textbox', { name: 'User name' }),
   password: page.getByRole('textbox', { name: 'Password' }),
@@ -26,7 +35,7 @@ async function expectInvalidCredentials(page: Page) {
   await expect(page.getByText(validationMessages.invalidCredentials, { exact: true })).toBeVisible();
 }
 
-async function verifyRole(page: Page, user: (typeof users)[keyof typeof users]) {
+async function verifyRole(page: Page, user: UserEntry) {
   const roleOption = page.locator(`[dropdown="role"][name="${user.roleTab}"]`);
   if (await roleOption.isVisible()) {
     await roleOption.click();
@@ -70,9 +79,12 @@ async function logOut(page: Page) {
   await expect(page.getByRole('textbox', { name: 'User name' })).toBeVisible();
 }
 
-for (const user of Object.values(users)) {
+for (const user of Object.values(users) as UserEntry[]) {
   test(`validates CarePro login for ${user.userType}`, async ({ page }) => {
     test.skip(!user.username || !user.password, `${user.userType} QA credentials are not configured`);
+
+    const usernameValue = user.username ?? '';
+    const passwordValue = user.password ?? '';
 
     await page.goto(connection.url());
     const { username, password, submit } = getLoginControls(page);
@@ -81,17 +93,17 @@ for (const user of Object.values(users)) {
     await expect(page.getByText(validationMessages.usernameRequired, { exact: true })).toBeVisible();
     await expect(page.getByText(validationMessages.passwordRequired, { exact: true })).toBeVisible();
 
-    await password.fill(user.password);
+    await password.fill(passwordValue);
     await submit.click();
     await expect(page.getByText(validationMessages.usernameRequired, { exact: true })).toBeVisible();
 
-    await username.fill(user.username);
+    await username.fill(usernameValue);
     await password.fill('abcd67gy');
     await submit.click();
     await expectInvalidCredentials(page);
 
     await username.fill('testuser');
-    await password.fill(user.password);
+    await password.fill(passwordValue);
     await submit.click();
     await expectInvalidCredentials(page);
 
@@ -100,11 +112,11 @@ for (const user of Object.values(users)) {
     await submit.click();
     await expectInvalidCredentials(page);
 
-    await username.fill(user.username);
-    await password.fill(user.password);
+    await username.fill(usernameValue);
+    await password.fill(passwordValue);
     await submit.click();
 
-    await expect(page.locator('#loggedInUser')).toContainText(user.displayName || user.username);
+    await expect(page.locator('#loggedInUser')).toContainText(user.displayName || usernameValue);
     await verifyRole(page, user);
     await logOut(page);
   });
