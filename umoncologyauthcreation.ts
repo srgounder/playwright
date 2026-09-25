@@ -1,6 +1,6 @@
 import { chromium } from '@playwright/test';
-import { connection } from './config/environment-connections';
-import { hasRealCredential, users } from './config/environment-account-credentials';
+import { connection } from './config/carepro-environments-connectionstrings';
+import { hasRealCredential, users } from './config/carepro-environments-account-credentials';
 
 if (!hasRealCredential(users.intake.username) || !hasRealCredential(users.intake.password)) {
   throw new Error('QA credentials are not configured for this environment');
