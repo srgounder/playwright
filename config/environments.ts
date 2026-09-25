@@ -45,22 +45,6 @@ export const environments: Record<string, EnvironmentConfig> = Object.freeze({
       password: 'h8tUVpul2#z8',
       driverClassName: 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
     },
-    intakeUMUser: process.env.QA_INTAKE_USERNAME || 'svc_auto_ic2',
-    intakeUMPassword: process.env.QA_INTAKE_PASSWORD || 'Automation@2428',
-    CRUMUser: process.env.QA_CLR_USERNAME || 'svc_auto_cr2',
-    CRUMPassword: process.env.QA_CLR_PASSWORD || 'Automation@2428',
-    FLRUMUser: process.env.QA_FLR_USERNAME || 'svc_auto_flr2',
-    FLRUMPassword: process.env.QA_FLR_PASSWORD || 'Automation@2429',
-    OfficeManagerUserName: process.env.QA_OFFICE_MANAGER_USERNAME || 'svc_auto_Ofcmgr2',
-    OfficeManagerPassword: process.env.QA_OFFICE_MANAGER_PASSWORD || 'Automation@2433',
-    ProviderUserName: process.env.QA_PROVIDER_USERNAME || 'svc_auto_provider2',
-    ProviderPassword: process.env.QA_PROVIDER_PASSWORD || 'Automation@2431',
-    PCPProviderUserName: process.env.QA_PCP_PROVIDER_USERNAME || 'svc_auto_pcpprovider2',
-    PCPProviderPassword: process.env.QA_PCP_PROVIDER_PASSWORD || 'Automation@2431',
-    PharmacyUser: process.env.QA_PHARMACY_USERNAME || 'svc_auto_rph2',
-    PharmacyPassword: process.env.QA_PHARMACY_PASSWORD || 'Automation@2431',
-    CRMUser: 'dummy',
-    CRMPwd: 'dummy',
     careProPlusApiKey: '56056_eb23227861a7d187438fbaa2a53b7ea80ba0a13d7719f09b63964f661e369f61',
     careProPlusBaseUrl: 'https://qaapp_careproplusvip.newcenturyhealth.com',
     env: 'qa',
@@ -240,10 +224,10 @@ export const environments: Record<string, EnvironmentConfig> = Object.freeze({
   }),
 });
 
-const normalizedEnvironmentName = (process.env.TEST_ENV || 'qa').toLowerCase();
+const normalizedEnvironmentName = (process.env.TEST_ENV || 'shqa').toLowerCase();
 const environmentKey = normalizedEnvironmentName as keyof typeof environments;
 const credentials = environments[environmentKey] ?? {
-  baseUrl: process.env.QA_BASE_URL || 'https://qa1carepro.evolent.com/',
+  baseUrl: process.env.SHQA_BASE_URL || 'https://qa1carepro.evolent.com/',
 };
 
 if (!credentials) {
@@ -325,52 +309,52 @@ export async function resolveLoggedInUserLabelName(loginName?: string): Promise<
 export const users = Object.freeze({
   intake: Object.freeze({
     userType: 'Intake Coordinator user',
-    username: process.env.QA_INTAKE_USERNAME || envCreds.intakeUMUser || envCreds.username || '',
-    password: process.env.QA_INTAKE_PASSWORD || envCreds.intakeUMPassword || envCreds.password || '',
+    username: envCreds.intakeUMUser || envCreds.username || '',
+    password: envCreds.intakeUMPassword || envCreds.password || '',
     displayName: process.env.QA_INTAKE_DISPLAY_NAME || 'Automation IC',
     roleTab: 'Intake Coordinator',
   }),
   flr: Object.freeze({
     userType: 'First Level Reviewer user',
-    username: process.env.QA_FLR_USERNAME || envCreds.FLRUMUser,
-    password: process.env.QA_FLR_PASSWORD || envCreds.FLRUMPassword,
+    username: envCreds.FLRUMUser,
+    password: envCreds.FLRUMPassword,
     displayName: process.env.QA_FLR_DISPLAY_NAME,
     roleTab: 'First Level Reviewer',
   }),
   clr: Object.freeze({
     userType: 'Clinical Reviewer user',
-    username: process.env.QA_CLR_USERNAME || envCreds.CRMUser || envCreds.CUMUser || envCreds.CRUMUser,
-    password: process.env.QA_CLR_PASSWORD || envCreds.CRMPwd || envCreds.CRUMPassword,
+    username: envCreds.CRMUser || envCreds.CUMUser || envCreds.CRUMUser,
+    password: envCreds.CRMPwd || envCreds.CRUMPassword,
     displayName: process.env.QA_CLR_DISPLAY_NAME,
     roleTab: 'Clinical Reviewer',
   }),
   pharmacy: Object.freeze({
     userType: 'Pharmacy Reviewer user',
-    username: process.env.QA_PHARMACY_USERNAME || envCreds.PharmacyUser,
-    password: process.env.QA_PHARMACY_PASSWORD || envCreds.PharmacyPassword,
+    username: envCreds.PharmacyUser,
+    password: envCreds.PharmacyPassword,
     displayName: process.env.QA_PHARMACY_DISPLAY_NAME,
     roleTab: 'Pharmacy',
   }),
   officeManager: Object.freeze({
     userType: 'Office Manager user',
-    username: process.env.QA_OFFICE_MANAGER_USERNAME || envCreds.OfficeManagerUserName,
-    password: process.env.QA_OFFICE_MANAGER_PASSWORD || envCreds.OfficeManagerPassword,
+    username: envCreds.OfficeManagerUserName,
+    password: envCreds.OfficeManagerPassword,
     displayName: process.env.QA_OFFICE_MANAGER_DISPLAY_NAME,
     roleTab: 'Provider Portal',
     providerPortal: true,
   }),
   provider: Object.freeze({
     userType: 'Provider user',
-    username: process.env.QA_PROVIDER_USERNAME || envCreds.ProviderUserName,
-    password: process.env.QA_PROVIDER_PASSWORD || envCreds.ProviderPassword,
+    username: envCreds.ProviderUserName,
+    password: envCreds.ProviderPassword,
     displayName: process.env.QA_PROVIDER_DISPLAY_NAME,
     roleTab: 'Provider Portal',
     providerPortal: true,
   }),
   pcpProvider: Object.freeze({
     userType: 'PCP Provider user',
-    username: process.env.QA_PCP_PROVIDER_USERNAME || envCreds.PCPProviderUserName,
-    password: process.env.QA_PCP_PROVIDER_PASSWORD || envCreds.PCPProviderPassword,
+    username: envCreds.PCPProviderUserName,
+    password: envCreds.PCPProviderPassword,
     displayName: process.env.QA_PCP_PROVIDER_DISPLAY_NAME,
     roleTab: 'Provider Portal',
     providerPortal: true,
@@ -379,8 +363,8 @@ export const users = Object.freeze({
 
 export const connection = Object.freeze({
   ...credentials,
-  username: process.env.QA_USERNAME || envCreds.intakeUMUser || envCreds.username || '',
-  password: process.env.QA_PASSWORD || envCreds.intakeUMPassword || envCreds.password || '',
+  username: envCreds.intakeUMUser || envCreds.username || '',
+  password: envCreds.intakeUMPassword || envCreds.password || '',
   users,
   url: (path = '/') => new URL(path, credentials.baseUrl).toString(),
 });
