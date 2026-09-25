@@ -1,5 +1,9 @@
 import { chromium } from '@playwright/test';
-import { connection } from './config/environments';
+import { connection, hasRealCredential } from './config/environments';
+
+if (!hasRealCredential(connection.username) || !hasRealCredential(connection.password)) {
+  throw new Error('QA credentials are not configured for this environment');
+}
 
 (async () => {
   const browser = await chromium.launch({

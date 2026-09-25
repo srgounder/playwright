@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
-import { connection } from '../config/environments';
+import { connection, hasRealCredential } from '../config/environments';
+
+test.skip(
+  !hasRealCredential(connection.username) || !hasRealCredential(connection.password),
+  'QA credentials are not configured for this environment',
+);
 
 test('test', async ({ page }) => {
   await page.goto(connection.url());

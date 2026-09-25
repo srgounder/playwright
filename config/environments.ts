@@ -220,6 +220,16 @@ if (!credentials) {
 const envCreds = credentials as Record<string, string | undefined>;
 
 export const environmentName = normalizedEnvironmentName;
+
+export const hasRealCredential = (value?: string): boolean => {
+  if (!value) {
+    return false;
+  }
+
+  const normalized = value.trim();
+  return normalized.length > 0 && !normalized.startsWith('__') && normalized.toLowerCase() !== 'dummy';
+};
+
 export const users = Object.freeze({
   intake: Object.freeze({
     userType: 'Intake Coordinator user',

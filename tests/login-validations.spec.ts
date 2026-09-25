@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { connection, users } from '../config/environments';
+import { connection, hasRealCredential, users } from '../config/environments';
 
 const validationMessages: Record<string, string> = {
   usernameRequired: 'The User name field is required.',
@@ -81,7 +81,10 @@ async function logOut(page: Page) {
 
 for (const user of Object.values(users) as UserEntry[]) {
   test(`validates CarePro login for ${user.userType}`, async ({ page }) => {
-    test.skip(!user.username || !user.password, `${user.userType} QA credentials are not configured`);
+    test.skip(
+      !hasRealCredential(user.username) || !hasRealCredential(user.password),
+      `${user.userType} QA credentials are not configured`,
+    );
 
     const usernameValue = user.username ?? '';
     const passwordValue = user.password ?? '';
