@@ -1,15 +1,21 @@
 import { hasRealCredential } from './environment-credentials';
+import { environmentConnections } from './environment-connections';
+
+const shqaDbConfig = environmentConnections.shqa.dbConfig;
+const shqaJdbcUrl = shqaDbConfig?.url || '';
+const shqaJdbcParts = /^jdbc:sqlserver:\/\/([^:;]+)(?::(\d+))?/i.exec(shqaJdbcUrl);
+const shqaDatabase = /(?:^|;)databaseName=([^;]+)/i.exec(shqaJdbcUrl)?.[1];
 
 export async function resolveLoggedInUserLabelName(loginName?: string): Promise<string | undefined> {
   if (!loginName || !hasRealCredential(loginName)) {
     return undefined;
   }
 
-  const server = process.env.SQL_SERVER || process.env.DB_SERVER;
-  const database = process.env.SQL_DATABASE || process.env.DB_NAME;
-  const user = process.env.SQL_USER || process.env.DB_USER;
-  const password = process.env.SQL_PASSWORD || process.env.DB_PASSWORD;
-  const port = Number(process.env.SQL_PORT || process.env.DB_PORT || 1433);
+  const server = shqaJdbcParts?.[1];
+  const database = shqaDatabase;
+  const user = shqaDbConfig?.username;
+  const password = shqaDbConfig?.password;
+  const port = Number(shqaJdbcParts?.[2] || 1433);
 
   if (!server || !database || !user || !password) {
     return undefined;
@@ -45,9 +51,9 @@ export async function resolveLoggedInUserLabelName(loginName?: string): Promise<
         on (c.ContactId = cpu.carepro_ContactId)
       where cpu.carepro_EffectiveFrom <= @currentdate
         and cpu.carepro_EffectiveTo >= @currentdate
-        and c.carepro_PortalLogin = '${String(loginName).replace(/'/g, "''")}'`;
+        and c.carepro_PortalLogin = @loginName`;
 
-    const result = await pool.request().query(query);
+      const result = await pool.request().input('loginName', sql.default.NVarChar, loginName).query(query);
     const label = result.recordset?.[0]?.LoggedInUserLableName as string | undefined;
     await pool.close();
     return label;
