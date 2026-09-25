@@ -1,4 +1,4 @@
-import { hasRealCredential } from './environment-credentials';
+import { hasRealCredential } from './environment-account-credentials';
 import { environmentConnections } from './environment-connections';
 
 const shqaDbConfig = environmentConnections.shqa.dbConfig;

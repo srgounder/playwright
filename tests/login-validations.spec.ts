@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { connection } from '../config/environment-connections';
-import { hasRealCredential, users } from '../config/environment-credentials';
+import { hasRealCredential, users } from '../config/environment-account-credentials';
 import { resolveLoggedInUserLabelName } from '../config/sql-data-retriever';
 
 const validationMessages: Record<string, string> = {
