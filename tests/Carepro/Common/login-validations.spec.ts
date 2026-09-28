@@ -67,9 +67,10 @@ async function verifyRole(page: Page, user: UserEntry) {
     return;
   }
 
-  for (const link of ['My View', 'ALL', 'Notification']) {
+  for (const link of ['My View', 'ALL']) {
     await expect(page.getByText(link, { exact: true })).toBeVisible();
   }
+  await expect(page.getByText('Notification', { exact: true })).toBeHidden();
   await expect(page.getByText('Intake', { exact: true })).toBeHidden();
 }
 
