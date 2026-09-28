@@ -83,7 +83,7 @@ async function logOut(page: Page) {
 }
 
 for (const user of Object.values(users) as UserEntry[]) {
-  test(`validates CarePro login for ${user.userType}`, async ({ page }) => {
+  test(`validates CarePro login for ${user.userType}`, { tag: '@NoTouch' }, async ({ page }) => {
     test.skip(
       !hasRealCredential(user.username) || !hasRealCredential(user.password),
       `${user.userType} QA credentials are not configured`,

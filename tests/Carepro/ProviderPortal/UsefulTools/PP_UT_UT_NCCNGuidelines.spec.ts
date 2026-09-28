@@ -80,7 +80,7 @@ async function validateNccnGuidelines(page: Page, user: ProviderPortalUser) {
 }
 
 for (const user of providerPortalUsers) {
-	test(`validates NCCN Guidelines for ${user.userType}`, async ({ page }) => {
+	test(`validates NCCN Guidelines for ${user.userType}`, { tag: '@NoTouch' }, async ({ page }) => {
 		await validateNccnGuidelines(page, user);
 	});
 }
