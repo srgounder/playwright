@@ -31,8 +31,6 @@ export const environments: Record<string, EnvironmentCredentials> = Object.freez
     CRUMPassword: 'Automation2026!!',
     FLRUMUser: 'svc_auto_flr2',
     FLRUMPassword: 'Automation2026!!',
-    CRMUser: 'dummy',
-    CRMPwd: 'dummy',
     OfficeManagerUserName: 'svc_auto_Ofcmgr2',
     OfficeManagerPassword: 'Automation2026!!',
     ProviderUserName: 'svc_auto_provider2',
