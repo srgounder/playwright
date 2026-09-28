@@ -11,7 +11,10 @@
 - Current CarePro tests:
   - `tests/Carepro/Common/login-validations.spec.ts`
   - `tests/Carepro/ProviderPortal/HomePage/PPAboutEvolent.spec.ts`
-- TypeScript validation currently passes with `npx tsc --noEmit`.
+- Clinical Reviewer login validation expects the `Notification` tab to be hidden.
+- About Evolent assertions use link-role locators to handle duplicate navigation/footer links.
+- TypeScript validation passes with `npx tsc --noEmit`.
+- Focused Chromium validations pass for the Clinical Reviewer login and Office Manager About Evolent flows.
 
 ## Recommended Next Steps
 
@@ -29,6 +32,7 @@
 npx tsc --noEmit
 $env:TEST_ENV = "shqa"
 npx playwright test tests/Carepro/ProviderPortal/HomePage/PPAboutEvolent.spec.ts --project=chromium
+npx playwright test tests/Carepro/Common/login-validations.spec.ts --grep "Clinical Reviewer user" --project=chromium
 npx playwright test
 ```
 
