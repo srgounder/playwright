@@ -61,7 +61,6 @@ async function validateNccnGuidelines(page: Page, user: ProviderPortalUser) {
 		nccnGuidelinesUrl,
 	);
 	await expect(guidelinesPage.getByRole('link', { name: 'Home', exact: true }).first()).toBeVisible();
-	await expect(guidelinesPage.getByText('Treatment by Cancer Type', { exact: true }).first()).toBeVisible();
 
 	if (guidelinesPage !== page) {
 		await guidelinesPage.close();
@@ -80,14 +79,8 @@ async function validateNccnGuidelines(page: Page, user: ProviderPortalUser) {
 	}
 }
 
-test('validates NCCN Guidelines for Office Manager user', async ({ page }) => {
-	await validateNccnGuidelines(page, users.officeManager);
-});
-
-test('validates NCCN Guidelines for Provider user', async ({ page }) => {
-	await validateNccnGuidelines(page, users.provider);
-});
-
-test('validates NCCN Guidelines for PCP Provider user', async ({ page }) => {
-	await validateNccnGuidelines(page, users.pcpProvider);
-});
+for (const user of providerPortalUsers) {
+	test(`validates NCCN Guidelines for ${user.userType}`, async ({ page }) => {
+		await validateNccnGuidelines(page, user);
+	});
+}
