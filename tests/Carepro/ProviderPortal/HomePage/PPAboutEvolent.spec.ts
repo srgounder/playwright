@@ -46,8 +46,8 @@ for (const user of providerPortalUsers) {
     await login(page, user.username ?? '', user.password ?? '');
     const aboutPage = await openAboutEvolent(page);
 
-    await expect(aboutPage.getByText('Provider Log-in', { exact: true })).toBeVisible();
-    await expect(aboutPage.getByText('Contact Us', { exact: true })).toBeVisible();
-    await expect(aboutPage.getByText('Solutions', { exact: true })).toBeVisible();
+    await expect(aboutPage.getByRole('link', { name: 'Provider Log-in' }).first()).toBeVisible();
+    await expect(aboutPage.getByRole('link', { name: 'Contact Us' }).first()).toBeVisible();
+    await expect(aboutPage.getByRole('link', { name: 'Solutions' }).first()).toBeVisible();
   });
 }
