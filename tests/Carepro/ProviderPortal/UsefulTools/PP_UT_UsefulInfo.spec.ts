@@ -46,7 +46,7 @@ async function returnToUsefulInfo(page: Page, externalPage: Page) {
 for (const { user, network } of usefulInfoScenarios) {
 	test(
 		`validates Useful Information for ${user.userType} on ${network}`,
-		{ tag: ['@PPUsefulInfo', '@ProviderPortal', '@NoTouch', '@ProdSmoke', '@PTESmoke'] },
+		{ tag: ['@ProviderPortal', '@NoTouch'] },
 		async ({ page }) => {
 			test.slow();
 			test.skip(

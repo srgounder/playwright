@@ -21,7 +21,7 @@ async function login(page: Page, username: string, password: string) {
 }
 
 for (const user of providerPortalUsers) {
-	test(`validates Download CSV for ${user.userType}`, { tag: '@NoTouch' }, async ({ page }, testInfo) => {
+	test(`validates Download CSV for ${user.userType}`, { tag: '@NoTouch', '@ProviderPortal' }, async ({ page }, testInfo) => {
 		test.skip(
 			!hasRealCredential(user.username) || !hasRealCredential(user.password),
 			`${user.userType} credentials are not configured for this environment`,

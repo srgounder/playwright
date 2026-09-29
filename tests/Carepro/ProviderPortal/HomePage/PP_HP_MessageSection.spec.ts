@@ -69,7 +69,7 @@ async function validateMessageLink(page: Page, name: string, destination: RegExp
 }
 
 for (const user of providerPortalUsers) {
-	test(`validates Provider Portal Message section for ${user.userType}`, { tag: '@NoTouch' }, async ({ page }) => {
+	test(`validates Provider Portal Message section for ${user.userType}`, { tag: '@NoTouch', '@ProviderPortal' }, async ({ page }) => {
 		test.skip(
 			!hasRealCredential(user.username) || !hasRealCredential(user.password),
 			`${user.userType} credentials are not configured for this environment`,

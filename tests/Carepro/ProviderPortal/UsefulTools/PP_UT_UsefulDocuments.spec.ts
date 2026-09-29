@@ -20,7 +20,7 @@ async function login(page: Page, username: string, password: string) {
 for (const { user, network } of documentScenarios) {
 	test(
 		`validates Useful Documents for ${user.userType} on ${network}`,
-		{ tag: ['@NoTouch'] },
+		{ tag: ['@NoTouch', '@ProviderPortal'] },
 		async ({ page }, testInfo) => {
 			test.slow();
 			test.skip(
