@@ -37,7 +37,7 @@ async function openAboutEvolent(page: Page) {
 }
 
 for (const user of providerPortalUsers) {
-  test(`validates About Evolent link for ${user.userType}`, { tag: '@NoTouch', '@ProviderPortal' }, async ({ page }) => {
+  test(`validates About Evolent link for ${user.userType}`, { tag: ['@NoTouch', '@ProviderPortal'] }, async ({ page }) => {
     test.skip(
       !hasRealCredential(user.username) || !hasRealCredential(user.password),
       `${user.userType} credentials are not configured for this environment`,
