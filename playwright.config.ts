@@ -291,7 +291,7 @@ export default defineConfig({
     ],
   ],
   use: {
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
   },
   projects: [
     {
