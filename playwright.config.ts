@@ -64,8 +64,8 @@ export const environmentConnections: Record<string, EnvironmentConnection> = Obj
     crmApiUrl: 'http://qacproapp.specialtycare.corp.evolenthealth.com/CarePro.Services.CRM.ServiceRequestService.svc',
     dbConfig: {
       url: 'jdbc:sqlserver://qasqlcore.specialtycare.corp.evolenthealth.com:1433;databaseName=NCH_QA_MSCRM;integratedSecurity=false;encrypt=true;trustServerCertificate=true',
-      username: dbUsername,
-      password: dbPassword,
+      username: dbUsername || 'careproportalreader',
+      password: dbPassword || 'h8tUVpul2#z8',
       driverClassName: 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
     },
   }),
