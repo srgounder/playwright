@@ -9,7 +9,7 @@ on:
       environment:
         description: CarePro environment name
         required: true
-        default: shqa
+        default: qa1
         type: string
       tag:
         description: Playwright test tag to run
@@ -31,8 +31,10 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       env:
-        TEST_ENV: ${{ github.event.inputs.environment || 'shqa' }}
+        TEST_ENV: ${{ github.event.inputs.environment || 'qa1' }}
         TEST_TAG: ${{ github.event.inputs.tag }}
+        CAREPRO_DB_USERNAME: ${{ secrets.CAREPRO_DB_USERNAME }}
+        CAREPRO_DB_PASSWORD: ${{ secrets.CAREPRO_DB_PASSWORD }}
       run: |
         if [ -n "$TEST_TAG" ]; then
           npx playwright test --project=chromium --grep "$TEST_TAG"

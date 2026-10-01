@@ -1,21 +1,21 @@
 import { hasRealCredential } from './carepro-environments-account-credentials';
 import { environmentConnections } from '../playwright.config';
 
-const shqaDbConfig = environmentConnections.shqa.dbConfig;
-const shqaJdbcUrl = shqaDbConfig?.url || '';
-const shqaJdbcParts = /^jdbc:sqlserver:\/\/([^:;]+)(?::(\d+))?/i.exec(shqaJdbcUrl);
-const shqaDatabase = /(?:^|;)databaseName=([^;]+)/i.exec(shqaJdbcUrl)?.[1];
+const qa1DbConfig = environmentConnections.qa1.dbConfig;
+const qa1JdbcUrl = qa1DbConfig?.url || '';
+const qa1JdbcParts = /^jdbc:sqlserver:\/\/([^:;]+)(?::(\d+))?/i.exec(qa1JdbcUrl);
+const qa1Database = /(?:^|;)databaseName=([^;]+)/i.exec(qa1JdbcUrl)?.[1];
 
 export async function resolveLoggedInUserLabelName(loginName?: string): Promise<string | undefined> {
   if (!loginName || !hasRealCredential(loginName)) {
     return undefined;
   }
 
-  const server = shqaJdbcParts?.[1];
-  const database = shqaDatabase;
-  const user = shqaDbConfig?.username;
-  const password = shqaDbConfig?.password;
-  const port = Number(shqaJdbcParts?.[2] || 1433);
+  const server = qa1JdbcParts?.[1];
+  const database = qa1Database;
+  const user = qa1DbConfig?.username;
+  const password = qa1DbConfig?.password;
+  const port = Number(qa1JdbcParts?.[2] || 1433);
 
   if (!server || !database || !user || !password) {
     return undefined;

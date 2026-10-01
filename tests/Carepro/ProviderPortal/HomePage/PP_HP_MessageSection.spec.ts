@@ -79,7 +79,7 @@ for (const user of providerPortalUsers) {
 		await page.getByText('Home', { exact: true }).click();
 		await toggleMessageSection(page);
 
-		if (environmentName === 'shqa') {
+		if (environmentName === 'qa1') {
 			for (const messageLink of messageLinks) {
 				await validateMessageLink(page, messageLink.name, messageLink.destination);
 			}

@@ -24,7 +24,7 @@ export const environments: Record<string, EnvironmentCredentials> = Object.freez
   dev: Object.freeze({}),
   prod: Object.freeze({}),
   pte: Object.freeze({}),
-  shqa: Object.freeze({
+  qa1: Object.freeze({
     intakeUMUser: 'svc_auto_ic2',
     intakeUMPassword: 'Automation2026!!',
     CRUMUser: 'svc_auto_cr2',
@@ -93,7 +93,7 @@ export const environments: Record<string, EnvironmentCredentials> = Object.freez
   uat: Object.freeze({}),
 });
 
-const normalizedEnvironmentName = (process.env.TEST_ENV || 'shqa').toLowerCase();
+const normalizedEnvironmentName = (process.env.TEST_ENV || 'qa1').toLowerCase();
 const environmentKey = normalizedEnvironmentName as keyof typeof environments;
 const credentials = environments[environmentKey] ?? {};
 

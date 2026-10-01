@@ -15,6 +15,9 @@ export type EnvironmentConnection = {
   careProPlusBaseUrl?: string;
 };
 
+const dbUsername = process.env.CAREPRO_DB_USERNAME;
+const dbPassword = process.env.CAREPRO_DB_PASSWORD;
+
 export const environmentConnections: Record<string, EnvironmentConnection> = Object.freeze({
   dev: Object.freeze({
     baseUrl: process.env.DEV_BASE_URL || 'http://itgdevweb1.headquarters.newcenturyhealth.com/',
@@ -23,8 +26,8 @@ export const environmentConnections: Record<string, EnvironmentConnection> = Obj
     crmApiUrl: '',
     dbConfig: {
       url: 'jdbc:sqlserver://ITGQASQLCORECA1:1433;databaseName=NCH_QA_MSCRM;integratedSecurity=false;encrypt=true;trustServerCertificate=true',
-      username: '__DbDevUser__',
-      password: '__DbDevPwd__',
+      username: dbUsername,
+      password: dbPassword,
       driverClassName: 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
     },
     careProPlusApiKey: '56056_eb23227861a7d187438fbaa2a53b7ea80ba0a13d7719f09b63964f661e369f61',
@@ -37,8 +40,8 @@ export const environmentConnections: Record<string, EnvironmentConnection> = Obj
     crmApiUrl: 'http://appintvip.headquarters.newcenturyhealth.com/CarePro.Services.CRM.ServiceRequestService.svc',
     dbConfig: {
       url: 'jdbc:sqlserver://SQLCORE.specialtycare.corp.evolenthealth.com:1433;databaseName=Carepro_MSCRM;integratedSecurity=false;encrypt=true;trustServerCertificate=true',
-      username: 'CareProPortalReader',
-      password: 'h8tUVpul2#z8',
+      username: dbUsername,
+      password: dbPassword,
       driverClassName: 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
     },
   }),
@@ -49,31 +52,31 @@ export const environmentConnections: Record<string, EnvironmentConnection> = Obj
     crmApiUrl: 'http://ptcproapp.specialtycare.corp.evolenthealth.com/CarePro.Services.CRM.ServiceRequestService.svc',
     dbConfig: {
       url: 'jdbc:sqlserver://PTSQLCORE.specialtycare.corp.evolenthealth.com:1433;databaseName=Carepro_MSCRM;integratedSecurity=false;encrypt=true;trustServerCertificate=true',
-      username: 'CareProPortalReader',
-      password: 'h8tUVpul2#z8',
+      username: dbUsername,
+      password: dbPassword,
       driverClassName: 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
     },
   }),
-  shqa: Object.freeze({
-    baseUrl: process.env.SHQA_BASE_URL || 'https://qa1carepro.evolent.com/',
+  qa1: Object.freeze({
+    baseUrl: process.env.QA1_BASE_URL || 'https://qa1carepro.evolent.com/',
     appUrl: 'https://qa1carepro.evolent.com/',
     appcrmurl: 'qa-vm-cprocm-01.specialtycare.corp.evolenthealth.com/',
     crmApiUrl: 'http://qacproapp.specialtycare.corp.evolenthealth.com/CarePro.Services.CRM.ServiceRequestService.svc',
     dbConfig: {
       url: 'jdbc:sqlserver://qasqlcore.specialtycare.corp.evolenthealth.com:1433;databaseName=NCH_QA_MSCRM;integratedSecurity=false;encrypt=true;trustServerCertificate=true',
-      username: 'CareProPortalReader',
-      password: 'h8tUVpul2#z8',
+      username: dbUsername,
+      password: dbPassword,
       driverClassName: 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
     },
   }),
-  shqa2: Object.freeze({
+  qa2: Object.freeze({
     appUrl: 'https://qa2carepro.evolent.com/',
     appcrmurl: 'qa-vm-cprocm-01.specialtycare.corp.evolenthealth.com/CareProQA2/',
     crmApiUrl: 'http://qa2cproapp.specialtycare.corp.evolenthealth.com/CarePro.Services.CRM.ServiceRequestService.svc',
     dbConfig: {
       url: 'jdbc:sqlserver://qasqlcore.specialtycare.corp.evolenthealth.com:1433;databaseName=NCH_QA_MSCRM2;integratedSecurity=false;encrypt=true;trustServerCertificate=true',
-      username: 'CareProPortalReader',
-      password: 'h8tUVpul2#z8',
+      username: dbUsername,
+      password: dbPassword,
       driverClassName: 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
     },
   }),
@@ -84,8 +87,8 @@ export const environmentConnections: Record<string, EnvironmentConnection> = Obj
     crmApiUrl: 'http://dvcproapp.specialtycare.corp.evolenthealth.com/CarePro.Services.CRM.ServiceRequestService.svc',
     dbConfig: {
       url: 'jdbc:sqlserver://dvsqlcore.specialtycare.corp.evolenthealth.com:1433;databaseName=NCH_QA_MSCRM;integratedSecurity=false;encrypt=true;trustServerCertificate=true',
-      username: 'CareProPortalReader',
-      password: 'h8tUVpul2#z8',
+      username: dbUsername,
+      password: dbPassword,
       driverClassName: 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
     },
   }),
@@ -96,8 +99,8 @@ export const environmentConnections: Record<string, EnvironmentConnection> = Obj
     crmApiUrl: 'http://utcproapp.specialtycare.corp.evolenthealth.com/CarePro.Services.CRM.ServiceRequestService.svc',
     dbConfig: {
       url: 'jdbc:sqlserver://utsqlcore.specialtycare.corp.evolenthealth.com:1433;databaseName=NCH_QA_MSCRM;integratedSecurity=false;encrypt=true;trustServerCertificate=true',
-      username: 'CareProPortalReader',
-      password: 'h8tUVpul2#z8',
+      username: dbUsername,
+      password: dbPassword,
       driverClassName: 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
     },
   }),
@@ -108,8 +111,8 @@ export const environmentConnections: Record<string, EnvironmentConnection> = Obj
     crmApiUrl: 'http://clcproapp.specialtycare.corp.evolenthealth.com/CarePro.Services.CRM.AuthorizationRequestService.svc',
     dbConfig: {
       url: 'jdbc:sqlserver://clsqlcore.specialtycare.corp.evolenthealth.com:1433;databaseName=Carepro_MSCRM;integratedSecurity=false;encrypt=true;trustServerCertificate=true',
-      username: 'CareProPortalReader',
-      password: 'h8tUVpul2#z8',
+      username: dbUsername,
+      password: dbPassword,
       driverClassName: 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
     },
   }),
@@ -118,8 +121,8 @@ export const environmentConnections: Record<string, EnvironmentConnection> = Obj
     crmApiUrl: 'http://qaappintvip0.headquarters.newcenturyhealth.com/CarePro.Services.CRM.ServiceRequestService.svc',
     dbConfig: {
       url: 'jdbc:sqlserver://qasqlcore.headquarters.newcenturyhealth.com:1433;databaseName=NCH_QA_MSCRM;integratedSecurity=false;encrypt=true;trustServerCertificate=true',
-      username: 'CareProPortalReader',
-      password: 'h8tUVpul2#z8',
+      username: dbUsername,
+      password: dbPassword,
       driverClassName: 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
     },
     careProPlusApiKey: '56056_eb23227861a7d187438fbaa2a53b7ea80ba0a13d7719f09b63964f661e369f61',
@@ -131,16 +134,16 @@ export const environmentConnections: Record<string, EnvironmentConnection> = Obj
     crmApiUrl: '',
     dbConfig: {
       url: '',
-      username: '__DbUATUser__',
-      password: '__DbUATPwd__',
+      username: dbUsername,
+      password: dbPassword,
       driverClassName: 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
     },
   }),
 });
 
-export const testEnvironment = (process.env.TEST_ENV || 'shqa').trim().toLowerCase();
+export const testEnvironment = (process.env.TEST_ENV || 'qa1').trim().toLowerCase();
 export const environmentName = testEnvironment;
-const selectedConnection = environmentConnections[environmentName] ?? environmentConnections.shqa;
+const selectedConnection = environmentConnections[environmentName] ?? environmentConnections.qa1;
 
 export const connection = Object.freeze({
   ...selectedConnection,
