@@ -1,5 +1,5 @@
 import { hasRealCredential } from './carepro-environments-account-credentials';
-import { environmentConnections } from './carepro-environments-connectionstrings';
+import { environmentConnections } from '../playwright.config';
 
 const shqaDbConfig = environmentConnections.shqa.dbConfig;
 const shqaJdbcUrl = shqaDbConfig?.url || '';

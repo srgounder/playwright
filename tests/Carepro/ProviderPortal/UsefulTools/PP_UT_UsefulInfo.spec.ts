@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { connection, environmentName } from '../../../../config/carepro-environments-connectionstrings';
+import { connection, environmentName } from '../../../../playwright.config';
 import { hasRealCredential, users } from '../../../../config/carepro-environments-account-credentials';
 
 const usefulInfoScenarios = [

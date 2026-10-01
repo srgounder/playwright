@@ -5,7 +5,7 @@
 - Playwright project with TypeScript and Playwright Test.
 - Test projects: Chromium, Firefox, and WebKit.
 - Default environment: `shqa`, selected through `TEST_ENV`.
-- Environment connection settings: `config/carepro-environments-connectionstrings.ts`.
+- Environment connection settings: moved into the root `playwright.config.ts`.
 - Environment account credentials and role users: `config/carepro-environments-account-credentials.ts`.
 - Shared SQL access, query templates, and placeholder substitution: `config/carepro-sql-data-retrievers.ts`.
 - Six CarePro Playwright spec files cover login validation, About Evolent, Download CSV, the Provider Portal Message section, NCCN Guidelines, and Useful Documents.
