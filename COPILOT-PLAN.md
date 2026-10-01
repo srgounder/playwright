@@ -6,7 +6,7 @@
 - Test projects: Chromium, Firefox, and WebKit.
 - Default environment: `qa1`, selected through `TEST_ENV`.
 - Environment connection settings: moved into the root `playwright.config.ts`.
-- Environment account credentials and role users: `config/carepro-environments-account-credentials.ts`.
+- Environment account credentials and role users are sourced from environment variables in `playwright.config.ts`.
 - Shared SQL access, query templates, and placeholder substitution: `config/carepro-sql-data-retrievers.ts`.
 - Six CarePro Playwright spec files cover login validation, About Evolent, Download CSV, the Provider Portal Message section, NCCN Guidelines, and Useful Documents.
 - All current scenarios use the `@NoTouch` tag; Chromium discovery lists 22 scenarios.

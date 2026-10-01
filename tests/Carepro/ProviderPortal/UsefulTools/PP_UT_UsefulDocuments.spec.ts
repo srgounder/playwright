@@ -1,7 +1,6 @@
 import { promises as fs } from 'node:fs';
 import { test, expect, type Page } from '@playwright/test';
-import { connection } from '../../../../playwright.config';
-import { hasRealCredential, users } from '../../../../config/carepro-environments-account-credentials';
+import { connection, hasRealCredential, users } from '../../../../playwright.config';
 
 const documentScenarios = [
 	{ user: users.officeManager, network: 'AMBETTER OF ILLINOIS' },

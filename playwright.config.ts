@@ -141,9 +141,119 @@ export const environmentConnections: Record<string, EnvironmentConnection> = Obj
   }),
 });
 
-export const testEnvironment = (process.env.TEST_ENV || 'qa1').trim().toLowerCase();
-export const environmentName = testEnvironment;
+const normalizedEnvironmentName = (process.env.TEST_ENV || 'qa1').trim().toLowerCase();
+export const testEnvironment = normalizedEnvironmentName;
+export const environmentName = normalizedEnvironmentName;
 const selectedConnection = environmentConnections[environmentName] ?? environmentConnections.qa1;
+
+const envCredentials = Object.freeze({
+  qa1: Object.freeze({
+    intakeUMUser: process.env.CAREPRO_INTAKE_UM_USER,
+    intakeUMPassword: process.env.CAREPRO_INTAKE_UM_PASSWORD,
+    CRUMUser: process.env.CAREPRO_CRUM_USER,
+    CRUMPassword: process.env.CAREPRO_CRUM_PASSWORD,
+    FLRUMUser: process.env.CAREPRO_FLRUM_USER,
+    FLRUMPassword: process.env.CAREPRO_FLRUM_PASSWORD,
+    OfficeManagerUserName: process.env.CAREPRO_OFFICE_MANAGER_USER,
+    OfficeManagerPassword: process.env.CAREPRO_OFFICE_MANAGER_PASSWORD,
+    ProviderUserName: process.env.CAREPRO_PROVIDER_USER,
+    ProviderPassword: process.env.CAREPRO_PROVIDER_PASSWORD,
+    PCPProviderUserName: process.env.CAREPRO_PCP_PROVIDER_USER,
+    PCPProviderPassword: process.env.CAREPRO_PCP_PROVIDER_PASSWORD,
+    PharmacyUser: process.env.CAREPRO_PHARMACY_USER,
+    PharmacyPassword: process.env.CAREPRO_PHARMACY_PASSWORD,
+    PCPProviderUserName1: process.env.CAREPRO_PCP_PROVIDER_USER_1,
+    PCPProviderPassword1: process.env.CAREPRO_PCP_PROVIDER_PASSWORD_1,
+    intakeUMUser1: process.env.CAREPRO_INTAKE_UM_USER_1,
+    intakeUMPassword1: process.env.CAREPRO_INTAKE_UM_PASSWORD_1,
+    CRUMUser1: process.env.CAREPRO_CRUM_USER_1,
+    CRUMPassword1: process.env.CAREPRO_CRUM_PASSWORD_1,
+    FLRUMUser1: process.env.CAREPRO_FLRUM_USER_1,
+    FLRUMPassword1: process.env.CAREPRO_FLRUM_PASSWORD_1,
+    ProviderUserName1: process.env.CAREPRO_PROVIDER_USER_1,
+    ProviderPassword1: process.env.CAREPRO_PROVIDER_PASSWORD_1,
+    UserManagementUMUser: process.env.CAREPRO_USER_MANAGEMENT_UM_USER,
+    UserManagementUMPassword: process.env.CAREPRO_USER_MANAGEMENT_UM_PASSWORD,
+    Impl_Intakeumportal: process.env.CAREPRO_IMPL_INTAKE_UM_PORTAL,
+    Impl_IntakeumPassword: process.env.CAREPRO_IMPL_INTAKE_UM_PASSWORD,
+    OfficeManagerUserName1: process.env.CAREPRO_OFFICE_MANAGER_USER_1,
+    OfficeManagerPassword1: process.env.CAREPRO_OFFICE_MANAGER_PASSWORD_1,
+  }),
+  qa2: Object.freeze({}),
+  shdev: Object.freeze({}),
+  dev: Object.freeze({}),
+  prod: Object.freeze({}),
+  pte: Object.freeze({}),
+  ut: Object.freeze({}),
+  ct: Object.freeze({}),
+  uat: Object.freeze({}),
+});
+
+const credentials = environmentName in envCredentials ? envCredentials[environmentName as keyof typeof envCredentials] : Object.freeze({});
+
+export const hasRealCredential = (value?: string): boolean => {
+  if (!value) {
+    return false;
+  }
+
+  const normalized = value.trim();
+  return normalized.length > 0 && !normalized.startsWith('__') && normalized.toLowerCase() !== 'dummy';
+};
+
+export const users = Object.freeze({
+  intake: Object.freeze({
+    userType: 'Intake Coordinator user',
+    username: (credentials as Record<string, string | undefined>).intakeUMUser || '',
+    password: (credentials as Record<string, string | undefined>).intakeUMPassword || '',
+    displayName: process.env.QA_INTAKE_DISPLAY_NAME || 'Automation IC',
+    roleTab: 'Intake Coordinator',
+  }),
+  flr: Object.freeze({
+    userType: 'First Level Reviewer user',
+    username: (credentials as Record<string, string | undefined>).FLRUMUser || '',
+    password: (credentials as Record<string, string | undefined>).FLRUMPassword || '',
+    displayName: process.env.QA_FLR_DISPLAY_NAME,
+    roleTab: 'First Level Reviewer',
+  }),
+  clr: Object.freeze({
+    userType: 'Clinical Reviewer user',
+    username: (credentials as Record<string, string | undefined>).CRUMUser || '',
+    password: (credentials as Record<string, string | undefined>).CRUMPassword || '',
+    displayName: process.env.QA_CLR_DISPLAY_NAME,
+    roleTab: 'Clinical Reviewer',
+  }),
+  pharmacy: Object.freeze({
+    userType: 'Pharmacy Reviewer user',
+    username: (credentials as Record<string, string | undefined>).PharmacyUser || '',
+    password: (credentials as Record<string, string | undefined>).PharmacyPassword || '',
+    displayName: process.env.QA_PHARMACY_DISPLAY_NAME,
+    roleTab: 'Pharmacy',
+  }),
+  officeManager: Object.freeze({
+    userType: 'Office Manager user',
+    username: (credentials as Record<string, string | undefined>).OfficeManagerUserName || '',
+    password: (credentials as Record<string, string | undefined>).OfficeManagerPassword || '',
+    displayName: process.env.QA_OFFICE_MANAGER_DISPLAY_NAME,
+    roleTab: 'Provider Portal',
+    providerPortal: true,
+  }),
+  provider: Object.freeze({
+    userType: 'Provider user',
+    username: (credentials as Record<string, string | undefined>).ProviderUserName || '',
+    password: (credentials as Record<string, string | undefined>).ProviderPassword || '',
+    displayName: process.env.QA_PROVIDER_DISPLAY_NAME,
+    roleTab: 'Provider Portal',
+    providerPortal: true,
+  }),
+  pcpProvider: Object.freeze({
+    userType: 'PCP Provider user',
+    username: (credentials as Record<string, string | undefined>).PCPProviderUserName || '',
+    password: (credentials as Record<string, string | undefined>).PCPProviderPassword || '',
+    displayName: process.env.QA_PCP_PROVIDER_DISPLAY_NAME,
+    roleTab: 'Provider Portal',
+    providerPortal: true,
+  }),
+});
 
 export const connection = Object.freeze({
   ...selectedConnection,
