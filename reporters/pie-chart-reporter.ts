@@ -26,6 +26,32 @@ const htmlEntities: Record<string, string> = {
 const escapeHtml = (value: string) =>
   value.replace(/[&<>"']/g, (character) => htmlEntities[character]);
 
+const collapseTestFilesScript = `<script>
+(() => {
+  const root = document.getElementById('root');
+  if (!root) {
+    return;
+  }
+
+  const collapseTestFiles = () => {
+    const testFiles = Array.from(root.querySelectorAll('[aria-expanded="true"]'))
+      .filter((button) => /\\.(?:spec|test)\\.[cm]?[jt]sx?$/i.test(button.textContent.trim()));
+    if (testFiles.length === 0) {
+      return false;
+    }
+
+    observer.disconnect();
+    testFiles.forEach((button) => button.click());
+    return true;
+  };
+
+  const observer = new MutationObserver(collapseTestFiles);
+  if (!collapseTestFiles()) {
+    observer.observe(root, { childList: true, subtree: true });
+  }
+})();
+</script>`;
+
 export default class PieChartReporter implements Reporter {
   private readonly results = new Map<string, RecordedResult>();
 
@@ -46,7 +72,10 @@ export default class PieChartReporter implements Reporter {
         throw new Error(`Could not find the Playwright report root in ${reportPath}`);
       }
 
-      await writeFile(reportPath, html.replace(rootMarker, `${summary}${rootMarker}`));
+      await writeFile(
+        reportPath,
+        html.replace(rootMarker, `${summary}${rootMarker}${collapseTestFilesScript}`),
+      );
 
       if (this.options.open) {
         const cliPath = path.resolve('node_modules/playwright/cli.js');
