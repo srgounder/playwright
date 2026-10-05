@@ -6,6 +6,7 @@ import type { Reporter, TestCase, TestResult } from '@playwright/test/reporter';
 type ReporterOptions = {
   reportFolder: string;
   testEnvironment: string;
+  branchName: string;
   runTimestamp: string;
   open: boolean;
 };
@@ -33,22 +34,25 @@ const collapseTestFilesScript = `<script>
     return;
   }
 
+  let collapseTimer;
   const collapseTestFiles = () => {
-    const testFiles = Array.from(root.querySelectorAll('[aria-expanded="true"]'))
-      .filter((button) => /\\.(?:spec|test)\\.[cm]?[jt]sx?$/i.test(button.textContent.trim()));
-    if (testFiles.length === 0) {
-      return false;
+    const testFile = Array.from(root.querySelectorAll('[aria-expanded="true"]'))
+      .find((button) => /\\.(?:spec|test)\\.[cm]?[jt]sx?$/i.test(button.textContent.trim()));
+    if (!testFile) {
+      observer.disconnect();
+      return;
     }
 
-    observer.disconnect();
-    testFiles.forEach((button) => button.click());
-    return true;
+    testFile.click();
+    collapseTimer = window.setTimeout(collapseTestFiles, 50);
   };
 
-  const observer = new MutationObserver(collapseTestFiles);
-  if (!collapseTestFiles()) {
-    observer.observe(root, { childList: true, subtree: true });
-  }
+  const observer = new MutationObserver(() => {
+    window.clearTimeout(collapseTimer);
+    collapseTimer = window.setTimeout(collapseTestFiles, 250);
+  });
+  observer.observe(root, { childList: true, subtree: true });
+  collapseTimer = window.setTimeout(collapseTestFiles, 250);
 })();
 </script>`;
 
@@ -143,8 +147,6 @@ export default class PieChartReporter implements Reporter {
             return `<span class="carepro-pie-label" style="left:${left.toFixed(1)}%;top:${top.toFixed(1)}%" title="${segment.label}: ${percentage}%">${percentage}%</span>`;
           })
           .join('');
-    const title = `CarePro Results | ${this.options.testEnvironment} | ${this.options.runTimestamp} UTC`;
-
     return `
 <section id="carepro-run-summary" aria-label="CarePro test results summary">
   <style>
@@ -155,7 +157,8 @@ export default class PieChartReporter implements Reporter {
     #carepro-run-summary .carepro-pie-label{position:absolute;z-index:1;transform:translate(-50%,-50%);color:#fff;font-size:9px;font-weight:700;line-height:1;text-shadow:0 1px 2px #202729,0 0 2px #202729;white-space:nowrap}
     #carepro-run-summary .carepro-summary-content{min-width:0}
     #carepro-run-summary .carepro-summary-title{font-weight:650}
-    #carepro-run-summary .carepro-summary-meta{margin-top:2px;color:#566164;font-size:12px;overflow-wrap:anywhere}
+    #carepro-run-summary .carepro-summary-meta{margin-top:2px;color:#566164;font-size:12px;font-weight:650;overflow-wrap:anywhere}
+    .header-title{font-size:20px}
     #carepro-run-summary ul{display:flex;flex-wrap:wrap;gap:8px 18px;margin:8px 0 0;padding:0;list-style:none}
     #carepro-run-summary li{display:flex;align-items:center;gap:6px;white-space:nowrap}
     #carepro-run-summary .carepro-swatch{width:9px;height:9px;border-radius:50%;flex:none}
@@ -164,8 +167,8 @@ export default class PieChartReporter implements Reporter {
   </style>
   <div class="carepro-pie" role="img" aria-label="Results: ${counts.passed} passed, ${counts.flaky} flaky, ${counts.failed} failed, ${counts.skipped} skipped">${pieLabels}</div>
   <div class="carepro-summary-content">
-    <div class="carepro-summary-title">${total} tests | ${escapeHtml(title)}</div>
-    <div class="carepro-summary-meta">Environment: ${escapeHtml(this.options.testEnvironment)} | ${escapeHtml(this.options.runTimestamp)} UTC</div>
+    <div class="carepro-summary-title">CarePro Test Automation Summary</div>
+    <div class="carepro-summary-meta">Environment: ${escapeHtml(this.options.testEnvironment)} | Branch: ${escapeHtml(this.options.branchName)} | ${escapeHtml(this.options.runTimestamp)} UTC</div>
     <ul>${legend}
     </ul>
   </div>

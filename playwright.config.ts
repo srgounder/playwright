@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { execFileSync } from 'node:child_process';
 
 export type EnvironmentConnection = {
   baseUrl?: string;
@@ -263,6 +264,14 @@ export const connection = Object.freeze({
 const runTimestamp = new Date().toISOString();
 const reportTimestamp = runTimestamp.replace(/[:.]/g, '-');
 const reportFolder = `playwright-report/${testEnvironment}-${reportTimestamp}`;
+const branchName = process.env.GITHUB_HEAD_REF
+  || process.env.GITHUB_REF_NAME
+  || process.env.BUILD_SOURCEBRANCHNAME
+  || process.env.CI_COMMIT_REF_NAME
+  || process.env.BRANCH_NAME
+  || process.env.BUILD_SOURCEBRANCH?.replace(/^refs\/heads\//, '')
+  || execFileSync('git', ['branch', '--show-current'], { encoding: 'utf8' }).trim()
+  || 'unknown';
 
 export default defineConfig({
   testDir: './tests',
@@ -276,7 +285,6 @@ export default defineConfig({
       {
         outputFolder: reportFolder,
         open: 'never',
-        title: `CarePro Test Report | ${testEnvironment} | ${runTimestamp} UTC`,
       },
     ],
     ['json', { outputFile: 'test-results/results.json' }],
@@ -285,13 +293,15 @@ export default defineConfig({
       {
         reportFolder,
         testEnvironment,
+        branchName,
         runTimestamp,
         open: !process.env.CI,
       },
     ],
   ],
   use: {
-    trace: 'retain-on-failure',
+    screenshot: 'off',
+    trace: 'off',
   },
   projects: [
     {
