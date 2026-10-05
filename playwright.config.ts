@@ -289,7 +289,7 @@ export default defineConfig({
     ],
     ['json', { outputFile: 'test-results/results.json' }],
     [
-      './reporters/pie-chart-reporter.ts',
+      './pie-chart-reporter.ts',
       {
         reportFolder,
         testEnvironment,
