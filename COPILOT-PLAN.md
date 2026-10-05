@@ -5,9 +5,13 @@
 - Playwright project with TypeScript and Playwright Test.
 - Test projects: Chromium, Firefox, and WebKit.
 - Default environment: `qa1`, selected through `TEST_ENV`.
-- Environment connection settings: moved into the root `playwright.config.ts`.
+- Root-level configuration only: environment connections, role/user definitions, and reporters are stored beside the project config in the workspace root.
+- Current root-level files:
+  - `playwright.config.ts`
+  - `pie-chart-reporter.ts`
+  - `carepro-sql-data-retrievers.ts`
 - Environment account credentials and role users are sourced from environment variables in `playwright.config.ts`.
-- Shared SQL access, query templates, and placeholder substitution: `config/carepro-sql-data-retrievers.ts`.
+- Shared SQL access, query templates, and placeholder substitution live in the root-level `carepro-sql-data-retrievers.ts`.
 - Six CarePro Playwright spec files cover login validation, About Evolent, Download CSV, the Provider Portal Message section, NCCN Guidelines, and Useful Documents.
 - All current scenarios use the `@NoTouch` tag; Chromium discovery lists 22 scenarios.
 - Useful Documents scenarios select a network for Office Manager, Provider, and PCP Provider users, then verify the Clinical Data Elements download.
@@ -22,25 +26,34 @@
 - Clinical Reviewer login validation expects the `Notification` tab to be hidden.
 - About Evolent assertions use link-role locators to handle duplicate navigation/footer links.
 - `npx tsc --noEmit` passes.
-- The previous 19-scenario Chromium `@NoTouch` suite passed; the three Useful Documents scenarios also passed separately on `qa1`.
+- Verified run evidence:
+  - The targeted Intake Coordinator login validation executed successfully: `1 passed (12.0s)`.
+  - Other role-based runs are intentionally skipped until their QA credentials are configured in the environment.
 
 ## Recommended Next Steps
 
-1. Finish syncing the root-level `.github`, `config`, and `tests` folders to `Evolent-Health/ClinicalTestAutomation` branch `EP-73761`; reconcile against the latest remote head and do not force-push.
-2. Replace hard-coded account, database, and API credentials with environment variables and GitHub Environment secrets before sharing the repository further.
-3. Configure the required GitHub secrets, then run the complete 22-scenario `@NoTouch` suite from Actions against `qa1`.
-4. Revalidate the full Chromium suite after the latest Useful Documents scenario was added; expand to Firefox and WebKit where supported.
-5. Add focused SQL retriever tests for query selection, placeholder substitution, and missing database configuration.
-6. Consider a reusable authenticated page fixture to reduce repeated login helpers across specs.
+1. Configure any remaining role-specific QA credentials for FLR / CLR / Pharmacy / Office Manager / Provider / PCP Provider in GitHub or local environment variables before running the full matrix.
+2. Run the full `@NoTouch` Chromium suite against `qa1` once the environment is complete to confirm the broader coverage set remains green.
+3. Expand validation to Firefox and WebKit where the application behavior is stable enough to compare.
+4. Add focused SQL retriever tests for query selection, placeholder substitution, and missing database configuration.
+5. Consider a reusable authenticated page fixture to reduce repeated login helpers across specs.
 
 ## Validation Commands
 
 ```powershell
 npx tsc --noEmit
 $env:TEST_ENV = "qa1"
+npx playwright test tests/Carepro/Common/login-validations.spec.ts --project=chromium --reporter=line --grep "Intake Coordinator user"
 npx playwright test --project=chromium --grep "@NoTouch"
 npx playwright test tests/Carepro/ProviderPortal/UsefulTools/PP_UT_UsefulDocuments.spec.ts --project=chromium
 npx playwright test
+```
+
+Verified current result:
+
+```powershell
+npx playwright test tests/Carepro/Common/login-validations.spec.ts --project=chromium --reporter=line --grep "Intake Coordinator user"
+# Result: 1 passed (12.0s)
 ```
 
 ## Environment Selection
