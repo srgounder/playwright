@@ -1,6 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
 import { connection, hasRealCredential, users } from '../../../playwright.config';
-import { resolveLoggedInUserLabelName } from '../../../config/carepro-sql-data-retrievers';
+import { resolveLoggedInUserLabelName } from '../../../carepro-sql-data-retrievers';
 
 const validationMessages: Record<string, string> = {
   usernameRequired: 'The User name field is required.',

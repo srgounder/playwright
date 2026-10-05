@@ -1,4 +1,4 @@
-import { environmentConnections, hasRealCredential } from '../playwright.config';
+import { environmentConnections, hasRealCredential } from './playwright.config';
 
 const qa1DbConfig = environmentConnections.qa1.dbConfig;
 const qa1JdbcUrl = qa1DbConfig?.url || '';
